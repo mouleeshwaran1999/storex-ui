@@ -1,83 +1,89 @@
 /* ══════════════════════════════════════════════════════════
-   Login.module.css — Clean centered login card
+   Login.module.css — Responsive login with modern theme
    ══════════════════════════════════════════════════════════ */
 
-/* Full-viewport centering with a subtle gradient background */
+/* Full-viewport centering with modern gradient background */
 .page {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #eef2ff 0%, #f8fafc 50%, #ede9fe 100%);
+  background: var(--bg-gradient);
   padding: 24px;
 }
 
 /* ── Card ──────────────────────────────────────────────── */
 .card {
   width: 100%;
-  max-width: 420px;
-  background: #fff;
-  border-radius: 20px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 20px 60px rgba(99,102,241,0.10);
-  padding: 48px 44px 44px;
+  max-width: 440px;
+  background: var(--white);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-lg);
+  padding: 52px 48px 48px;
+  border: 1px solid var(--gray-200);
 }
 
 /* ── Brand ─────────────────────────────────────────────── */
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   justify-content: center;
-  margin-bottom: 32px;
+  margin-bottom: 36px;
 }
 
 .logoMark {
-  width: 40px;
-  height: 40px;
-  background: var(--primary);
-  border-radius: 10px;
+  width: 46px;
+  height: 46px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 800;
-  color: #fff;
+  color: var(--white);
   letter-spacing: -1px;
+  box-shadow: var(--shadow-md);
 }
 
 .brandName {
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 800;
-  color: var(--gray-900);
-  letter-spacing: -0.6px;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.8px;
 }
 
 /* ── Headings ──────────────────────────────────────────── */
 .title {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 700;
   color: var(--gray-900);
   text-align: center;
-  letter-spacing: -0.4px;
-  margin-bottom: 6px;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
 }
 
 .subtitle {
   font-size: 14px;
   color: var(--gray-500);
   text-align: center;
-  margin-bottom: 28px;
+  margin-bottom: 32px;
 }
 
 /* ── Alert ─────────────────────────────────────────────── */
 .alert {
-  background: #fef2f2;
+  background: var(--danger-light);
   color: #b91c1c;
   border: 1px solid #fca5a5;
   border-radius: var(--radius);
-  padding: 11px 14px;
+  padding: 12px 16px;
   font-size: 13px;
-  margin-bottom: 20px;
+  font-weight: 500;
+  margin-bottom: 24px;
   text-align: center;
 }
 
@@ -85,35 +91,39 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 20px;
 }
 
 .field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .label {
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--gray-700);
 }
 
 .input {
-  padding: 11px 14px;
-  border: 1.5px solid var(--gray-200);
+  padding: 12px 16px;
+  border: 2px solid var(--gray-200);
   border-radius: var(--radius);
   font-size: 14px;
   color: var(--gray-900);
-  background: #fff;
+  background: var(--white);
   outline: none;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition: all var(--transition-fast);
+}
+
+.input:hover {
+  border-color: var(--gray-300);
 }
 
 .input:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+  box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.1);
 }
 
 .input::placeholder {
@@ -122,264 +132,125 @@
 
 /* ── Submit button ──────────────────────────────────────── */
 .btn {
-  margin-top: 6px;
-  padding: 12px;
-  background: var(--primary);
+  margin-top: 8px;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   border: none;
   border-radius: var(--radius);
   font-size: 15px;
-  font-weight: 600;
-  color: #fff;
-  cursor: pointer;
-  transition: background 0.15s, opacity 0.15s;
-  letter-spacing: 0.1px;
+  font-weight: 700;
+  color: var(--white);
+  transition: all var(--transition-fast);
+  letter-spacing: 0.2px;
+  box-shadow: var(--shadow);
 }
 
 .btn:hover:not(:disabled) {
-  background: var(--primary-dark);
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary-hover));
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn:disabled {
-  opacity: 0.65;
+  opacity: 0.7;
   cursor: not-allowed;
 }
 
-@media (max-width: 480px) {
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE STYLES
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Tablet (< 768px) ──────────────────────────────── */
+@media (max-width: 768px) {
   .card {
-    padding: 36px 24px 32px;
+    max-width: 400px;
+    padding: 44px 36px 40px;
+  }
+
+  .brand {
+    margin-bottom: 32px;
+  }
+
+  .logoMark {
+    width: 42px;
+    height: 42px;
+    font-size: 20px;
+  }
+
+  .brandName {
+    font-size: 26px;
+  }
+
+  .title {
+    font-size: 22px;
   }
 }
 
+/* ── Mobile (< 640px) ──────────────────────────────── */
+@media (max-width: 640px) {
+  .page {
+    padding: 16px;
+  }
 
-/* ── Left — brand panel ──────────────────────────── */
-.left {
-  flex: 1;
-  background: linear-gradient(145deg, #1e1b4b 0%, #312e81 45%, #4f46e5 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 48px;
-  position: relative;
-  overflow: hidden;
+  .card {
+    padding: 36px 24px 32px;
+    border-radius: var(--radius-xl);
+  }
+
+  .brand {
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .logoMark {
+    width: 38px;
+    height: 38px;
+    font-size: 18px;
+  }
+
+  .brandName {
+    font-size: 22px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .subtitle {
+    font-size: 13px;
+    margin-bottom: 28px;
+  }
+
+  .form {
+    gap: 18px;
+  }
+
+  .input,
+  .btn {
+    min-height: 44px; /* Touch-friendly */
+  }
+
+  .btn {
+    margin-top: 6px;
+  }
 }
 
-/* Subtle decorative blobs */
-.left::before {
-  content: '';
-  position: absolute;
-  width: 400px;
-  height: 400px;
-  background: rgba(255,255,255,0.04);
-  border-radius: 50%;
-  top: -120px;
-  right: -120px;
-}
+/* ── Very small mobile (< 400px) ───────────────────── */
+@media (max-width: 400px) {
+  .card {
+    padding: 32px 20px 28px;
+  }
 
-.left::after {
-  content: '';
-  position: absolute;
-  width: 300px;
-  height: 300px;
-  background: rgba(255,255,255,0.04);
-  border-radius: 50%;
-  bottom: -80px;
-  left: -80px;
-}
+  .brandName {
+    font-size: 20px;
+  }
 
-.leftInner {
-  max-width: 440px;
-  position: relative;
-  z-index: 1;
-}
-
-.brandRow {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 36px;
-}
-
-.logoMark {
-  width: 44px;
-  height: 44px;
-  background: rgba(255, 255, 255, 0.15);
-  border: 2px solid rgba(255,255,255,0.3);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  font-weight: 800;
-  color: #fff;
-}
-
-.brandName {
-  font-size: 28px;
-  font-weight: 800;
-  color: #fff;
-  letter-spacing: -0.5px;
-}
-
-.tagline {
-  font-size: 32px;
-  font-weight: 700;
-  color: #fff;
-  line-height: 1.2;
-  letter-spacing: -0.5px;
-  margin-bottom: 14px;
-}
-
-.taglineSub {
-  font-size: 15px;
-  color: rgba(255,255,255,0.7);
-  line-height: 1.6;
-  margin-bottom: 40px;
-}
-
-.featureList {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-.feature {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-}
-
-.featureIcon {
-  font-size: 22px;
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-
-.feature strong {
-  display: block;
-  font-size: 14px;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 2px;
-}
-
-.feature p {
-  font-size: 12px;
-  color: rgba(255,255,255,0.6);
-  line-height: 1.4;
-}
-
-/* ── Right — form panel ──────────────────────────── */
-.right {
-  width: 460px;
-  min-width: 420px;
-  background: var(--gray-50);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 32px;
-}
-
-.formCard {
-  width: 100%;
-  max-width: 380px;
-}
-
-.formHeader {
-  margin-bottom: 32px;
-}
-
-.formTitle {
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--gray-900);
-  letter-spacing: -0.5px;
-  margin-bottom: 6px;
-}
-
-.formSubtitle {
-  font-size: 14px;
-  color: var(--gray-500);
-}
-
-/* Alert */
-.alert {
-  background: var(--danger-light);
-  color: #b91c1c;
-  border: 1px solid #fca5a5;
-  border-radius: var(--radius);
-  padding: 11px 14px;
-  font-size: 13px;
-  margin-bottom: 20px;
-}
-
-/* Form */
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.label {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--gray-700);
-}
-
-.input {
-  padding: 11px 14px;
-  border: 1.5px solid var(--gray-200);
-  border-radius: var(--radius);
-  font-size: 14px;
-  color: var(--gray-900);
-  background: #fff;
-  outline: none;
-  transition: border-color 0.15s, box-shadow 0.15s;
-}
-
-.input:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
-}
-
-.submitBtn {
-  margin-top: 8px;
-  padding: 12px;
-  background: var(--primary);
-  border: none;
-  border-radius: var(--radius);
-  font-size: 15px;
-  font-weight: 600;
-  color: #fff;
-  cursor: pointer;
-  transition: background 0.15s, opacity 0.15s;
-}
-
-.submitBtn:hover:not(:disabled) {
-  background: var(--primary-dark);
-}
-
-.submitBtn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.hint {
-  margin-top: 20px;
-  font-size: 12px;
-  color: var(--gray-400);
-  text-align: center;
-}
-
-/* Responsive: stack on small screens */
-@media (max-width: 768px) {
-  .page { flex-direction: column; }
-  .left { padding: 40px 24px; flex: none; }
-  .right { width: 100%; min-width: 0; }
+  .title {
+    font-size: 18px;
+  }
 }

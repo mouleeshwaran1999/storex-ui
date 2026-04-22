@@ -114,10 +114,10 @@ export default function SuperAdminAdmins() {
               <tr className={styles.emptyRow}><td colSpan={4}>No admins yet. Click "New Admin" to add one.</td></tr>
             ) : admins.map((a) => (
               <tr key={a.id}>
-                <td><strong>{a.name}</strong></td>
-                <td>{a.username}</td>
-                <td>{a.mobile}</td>
-                <td>
+                <td data-label="Name"><strong>{a.name}</strong></td>
+                <td data-label="Username">{a.username}</td>
+                <td data-label="Mobile">{a.mobile}</td>
+                <td data-label="Actions">
                   <div className={styles.tdActions}>
                     <button className={styles.editBtn} onClick={() => openEdit(a)}>Edit</button>
                     <button className={styles.deleteBtn} onClick={() => handleDelete(a.id)}>Delete</button>

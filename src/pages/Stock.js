@@ -131,9 +131,9 @@ export default function Stock() {
               <tr className={styles.emptyRow}><td colSpan={4}>No products found. Add products first.</td></tr>
             ) : products.map((p) => (
               <tr key={p.id}>
-                <td><strong>{p.name}</strong></td>
-                <td>₹{Number(p.price).toFixed(2)}</td>
-                <td>
+                <td data-label="Product"><strong>{p.name}</strong></td>
+                <td data-label="Price (₹)">₹{Number(p.price).toFixed(2)}</td>
+                <td data-label="Current Stock">
                   <span className={
                     p.stock === 0 ? styles.stockZero :
                     p.stock < 5  ? styles.stockLow  :
@@ -142,7 +142,7 @@ export default function Stock() {
                     {p.stock}
                   </span>
                 </td>
-                <td>
+                <td data-label="Status">
                   {p.stock === 0
                     ? <span className={styles.stockZero}>Out of stock</span>
                     : p.stock < 5

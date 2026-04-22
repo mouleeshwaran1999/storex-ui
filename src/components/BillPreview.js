@@ -177,11 +177,11 @@ export default function BillPreview({ bill, onClose }) {
             <tbody>
               {bill.items.map((item, i) => (
                 <tr key={i}>
-                  <td>{i + 1}</td>
-                  <td>{item.productName}</td>
-                  <td>₹{Number(item.price).toFixed(2)}</td>
-                  <td>{item.quantity}</td>
-                  <td style={{ textAlign: 'right' }}>₹{Number(item.subtotal).toFixed(2)}</td>
+                  <td data-label="#">{i + 1}</td>
+                  <td data-label="Product">{item.productName}</td>
+                  <td data-label="Unit Price">₹{Number(item.price).toFixed(2)}</td>
+                  <td data-label="Qty">{item.quantity}</td>
+                  <td data-label="Subtotal" style={{ textAlign: 'right' }}>₹{Number(item.subtotal).toFixed(2)}</td>
                 </tr>
               ))}
             </tbody>

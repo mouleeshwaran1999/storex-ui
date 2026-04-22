@@ -148,17 +148,17 @@ export default function AdminStores() {
               <tr className={styles.emptyRow}><td colSpan={6}>No stores yet. Click "New Store" to add one.</td></tr>
             ) : stores.map((s) => (
               <tr key={s.id}>
-                <td>
+                <td data-label="Logo">
                   {s.logo
                     ? <img src={s.logo} alt={s.name} style={{ width: 36, height: 36, borderRadius: 8, objectFit: 'cover' }} />
                     : <div style={{ width: 36, height: 36, borderRadius: 8, background: '#e0e7ff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: '#6366f1' }}>{s.name[0]}</div>
                   }
                 </td>
-                <td><strong>{s.name}</strong></td>
-                <td>{s.address}</td>
-                <td><span className={styles.badge}>{s.gst}</span></td>
-                <td>{getEmpNames(s.employeeIds)}</td>
-                <td>
+                <td data-label="Store Name"><strong>{s.name}</strong></td>
+                <td data-label="Address">{s.address}</td>
+                <td data-label="GST"><span className={styles.badge}>{s.gst}</span></td>
+                <td data-label="Employees">{getEmpNames(s.employeeIds)}</td>
+                <td data-label="Actions">
                   <div className={styles.tdActions}>
                     <button className={styles.editBtn} onClick={() => openEdit(s)}>Edit</button>
                     <button className={styles.deleteBtn} onClick={() => handleDelete(s.id)}>Delete</button>

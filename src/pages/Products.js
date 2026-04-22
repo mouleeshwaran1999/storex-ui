@@ -124,10 +124,10 @@ export default function Products() {
               <tr className={styles.emptyRow}><td colSpan={5}>No products yet. Click "New Product" to add one.</td></tr>
             ) : products.map((p) => (
               <tr key={p.id}>
-                <td><strong>{p.name}</strong></td>
-                <td>₹{Number(p.price).toFixed(2)}</td>
-                <td>{p.stock}</td>
-                <td>
+                <td data-label="Product Name"><strong>{p.name}</strong></td>
+                <td data-label="Price (₹)">₹{Number(p.price).toFixed(2)}</td>
+                <td data-label="Stock">{p.stock}</td>
+                <td data-label="Status">
                   <span className={
                     p.stock === 0 ? styles.stockZero :
                     p.stock < 5  ? styles.stockLow  :
@@ -136,7 +136,7 @@ export default function Products() {
                     {p.stock === 0 ? 'Out of stock' : p.stock < 5 ? 'Low stock' : 'In stock'}
                   </span>
                 </td>
-                <td>
+                <td data-label="Actions">
                   <div className={styles.tdActions}>
                     <button className={styles.editBtn} onClick={() => openEdit(p)}>Edit</button>
                     <button className={styles.deleteBtn} onClick={() => handleDelete(p.id)}>Delete</button>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Navbar from './Navbar';
@@ -58,21 +58,49 @@ const NAV_CONFIG = {
 export default function Layout() {
   const { user } = useAuth();
   const links = NAV_CONFIG[user?.role] || [];
+  
+  // Mobile sidebar state
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Lock body scroll when mobile sidebar is open
+  useEffect(() => {
+    if (sidebarOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [sidebarOpen]);
+
+  // Close sidebar on route change (mobile)
+  const handleLinkClick = () => {
+    setSidebarOpen(false);
+  };
 
   return (
     <div className={styles.shell}>
       {/* Fixed top navbar */}
-      <Navbar />
+      <Navbar onMenuToggle={() => setSidebarOpen(!sidebarOpen)} />
+
+      {/* Mobile overlay backdrop */}
+      {sidebarOpen && (
+        <div 
+          className={styles.overlay} 
+          onClick={() => setSidebarOpen(false)}
+          aria-hidden="true"
+        />
+      )}
 
       {/* Below navbar: sidebar + main */}
       <div className={styles.body}>
         {/* Sidebar */}
-        <aside className={styles.sidebar}>
+        <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ''}`}>
           <nav className={styles.nav}>
             {links.map((link) => (
               <NavLink
                 key={link.to}
                 to={link.to}
+                onClick={handleLinkClick}
                 className={({ isActive }) =>
                   `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`
                 }

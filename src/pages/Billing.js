@@ -178,12 +178,12 @@ export default function Billing() {
             ) : (
               [...history].reverse().map((bill) => (
                 <tr key={bill.id}>
-                  <td><code className={styles.billIdBadge}>{bill.id}</code></td>
-                  <td>{bill.customerName}</td>
-                  <td><span className={styles.badge}>{bill.items.length}</span></td>
-                  <td><strong>Rs.{Number(bill.total).toFixed(2)}</strong></td>
-                  <td style={{ color: 'var(--gray-500)', fontSize: 13 }}>{fmtDate(bill.createdAt)}</td>
-                  <td>
+                  <td data-label="Bill ID"><code className={styles.billIdBadge}>{bill.id}</code></td>
+                  <td data-label="Customer">{bill.customerName}</td>
+                  <td data-label="Items"><span className={styles.badge}>{bill.items.length}</span></td>
+                  <td data-label="Total"><strong>Rs.{Number(bill.total).toFixed(2)}</strong></td>
+                  <td data-label="Date" style={{ color: 'var(--gray-500)', fontSize: 13 }}>{fmtDate(bill.createdAt)}</td>
+                  <td data-label="Actions">
                     <div className={styles.tdActions}>
                       <button className={styles.editBtn} onClick={() => setPreviewBill(bill)}>
                         View Bill

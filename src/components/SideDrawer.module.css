@@ -1,13 +1,17 @@
+/* ═══════════════════════════════════════════════════════
+   SideDrawer.module.css — Responsive drawer with modern theme
+   ═══════════════════════════════════════════════════════ */
+
 /* Semi-transparent blurred backdrop */
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.45);
-  backdrop-filter: blur(3px);
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
   z-index: 200;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.25s ease;
+  transition: opacity var(--transition-base);
 }
 
 .overlayVisible {
@@ -21,15 +25,15 @@
   top: 0;
   right: 0;
   bottom: 0;
-  width: 480px;
+  width: 520px;
   max-width: 100vw;
-  background: #fff;
+  background: var(--white);
   z-index: 300;
   transform: translateX(100%);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform var(--transition-slow);
   display: flex;
   flex-direction: column;
-  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-xl);
 }
 
 .drawerOpen {
@@ -41,91 +45,186 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 24px;
-  border-bottom: 1px solid #e2e8f0;
+  padding: 24px 28px;
+  border-bottom: 1px solid var(--gray-200);
   flex-shrink: 0;
-  background: #fff;
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--white) 100%);
 }
 
 .title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #0f172a;
-  letter-spacing: -0.01em;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gray-900);
+  letter-spacing: -0.02em;
 }
 
 .closeBtn {
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f1f5f9;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  color: #64748b;
-  transition: background 0.15s, color 0.15s;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  color: var(--gray-600);
+  transition: all var(--transition-fast);
   flex-shrink: 0;
 }
 
 .closeBtn:hover {
-  background: #e2e8f0;
-  color: #0f172a;
+  background: var(--danger-light);
+  border-color: #fca5a5;
+  color: #b91c1c;
+  transform: rotate(90deg);
+}
+
+.closeBtn:active {
+  transform: rotate(90deg) scale(0.95);
 }
 
 /* Scrollable content */
 .body {
   flex: 1;
   overflow-y: auto;
-  padding: 24px;
+  padding: 28px;
+  background: var(--white);
+}
+
+/* Smooth scrollbar */
+.body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.body::-webkit-scrollbar-track {
+  background: var(--gray-100);
+}
+
+.body::-webkit-scrollbar-thumb {
+  background: var(--gray-300);
+  border-radius: 4px;
+}
+
+.body::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-400);
 }
 
 /* Footer */
 .footer {
-  padding: 16px 24px;
-  border-top: 1px solid #e2e8f0;
+  padding: 20px 28px;
+  border-top: 1px solid var(--gray-200);
   display: flex;
-  gap: 10px;
+  gap: 12px;
   justify-content: flex-end;
   flex-shrink: 0;
-  background: #f8fafc;
+  background: var(--gray-50);
 }
 
 .cancelBtn {
-  padding: 9px 20px;
-  background: #fff;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  padding: 11px 24px;
+  background: var(--white);
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius);
   font-size: 14px;
-  font-weight: 500;
-  color: #475569;
-  cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
+  font-weight: 600;
+  color: var(--gray-700);
+  transition: all var(--transition-fast);
 }
 
 .cancelBtn:hover {
-  background: #f1f5f9;
-  border-color: #cbd5e1;
+  background: var(--gray-100);
+  border-color: var(--gray-400);
+  color: var(--gray-900);
+}
+
+.cancelBtn:active {
+  transform: scale(0.97);
 }
 
 .saveBtn {
-  padding: 9px 24px;
-  background: #6366f1;
+  padding: 11px 28px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius);
   font-size: 14px;
-  font-weight: 600;
-  color: #fff;
-  cursor: pointer;
-  transition: background 0.15s, opacity 0.15s;
+  font-weight: 700;
+  color: var(--white);
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
 }
 
 .saveBtn:hover:not(:disabled) {
-  background: #4f46e5;
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary-hover));
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.saveBtn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--shadow-xs);
 }
 
 .saveBtn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE STYLES
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Tablet (< 768px) ──────────────────────────────── */
+@media (max-width: 768px) {
+  .drawer {
+    width: 100%; /* Full width on tablet */
+  }
+
+  .header {
+    padding: 20px 20px;
+  }
+
+  .title {
+    font-size: 17px;
+  }
+
+  .body {
+    padding: 24px 20px;
+  }
+
+  .footer {
+    padding: 16px 20px;
+  }
+}
+
+/* ── Mobile (< 640px) ──────────────────────────────── */
+@media (max-width: 640px) {
+  .header {
+    padding: 18px 16px;
+  }
+
+  .title {
+    font-size: 16px;
+  }
+
+  .closeBtn {
+    width: 38px;
+    height: 38px;
+  }
+
+  .body {
+    padding: 20px 16px;
+  }
+
+  .footer {
+    padding: 14px 16px;
+    flex-direction: column-reverse; /* Stack buttons on mobile */
+    gap: 10px;
+  }
+
+  .cancelBtn,
+  .saveBtn {
+    width: 100%; /* Full width buttons on mobile */
+    justify-content: center;
+    min-height: 44px; /* Touch-friendly */
+  }
 }

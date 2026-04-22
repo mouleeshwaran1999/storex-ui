@@ -1,17 +1,47 @@
+/* ═══════════════════════════════════════════════════════
+   Navbar.module.css — Responsive navbar with modern theme
+   ═══════════════════════════════════════════════════════ */
+
 .navbar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: 64px;
-  background: #fff;
-  border-bottom: 1px solid #e2e8f0;
+  height: var(--navbar-height);
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-200);
   display: flex;
   align-items: center;
   padding: 0 24px;
-  gap: 20px;
+  gap: 16px;
   z-index: 100;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── Hamburger Menu (Mobile/Tablet) ──────────────── */
+.hamburger {
+  display: none; /* Hidden on desktop */
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: var(--gray-100);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  color: var(--gray-700);
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+.hamburger:hover {
+  background: var(--primary-light);
+  border-color: var(--primary-border);
+  color: var(--primary-dark);
+}
+
+.hamburger:active {
+  transform: scale(0.95);
 }
 
 /* ── Brand ──────────────────────────────────────── */
@@ -23,24 +53,28 @@
 }
 
 .logoMark {
-  width: 34px;
-  height: 34px;
-  background: linear-gradient(135deg, #6366f1, #4f46e5);
-  border-radius: 9px;
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  border-radius: var(--radius);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 800;
-  color: #fff;
+  color: var(--white);
   letter-spacing: -0.5px;
+  box-shadow: var(--shadow-sm);
 }
 
 .brandName {
-  font-size: 18px;
-  font-weight: 700;
-  color: #0f172a;
-  letter-spacing: -0.5px;
+  font-size: 19px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.6px;
 }
 
 /* ── Store banner (employee) ─────────────────────── */
@@ -49,29 +83,31 @@
   align-items: center;
   gap: 10px;
   padding: 6px 14px;
-  background: #f1f5f9;
-  border-radius: 10px;
-  border: 1px solid #e2e8f0;
+  background: var(--primary-light);
+  border-radius: var(--radius);
+  border: 1px solid var(--primary-border);
 }
 
 .storeLogo {
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
   object-fit: cover;
+  box-shadow: var(--shadow-xs);
 }
 
 .storeLogoPlaceholder {
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
-  color: #fff;
+  color: var(--white);
+  box-shadow: var(--shadow-xs);
 }
 
 .storeText {
@@ -82,14 +118,14 @@
 .storeName {
   font-size: 13px;
   font-weight: 600;
-  color: #0f172a;
-  line-height: 1.2;
+  color: var(--gray-900);
+  line-height: 1.3;
 }
 
 .storeAddr {
   font-size: 11px;
-  color: #64748b;
-  line-height: 1.2;
+  color: var(--gray-600);
+  line-height: 1.3;
 }
 
 /* ── Spacer ──────────────────────────────────────── */
@@ -110,16 +146,17 @@
 }
 
 .avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  color: #fff;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+  color: var(--white);
   font-size: 13px;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: var(--shadow-xs);
 }
 
 .userMeta {
@@ -131,31 +168,31 @@
 .userName {
   font-size: 13px;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--gray-900);
 }
 
 .roleBadge {
   font-size: 11px;
-  font-weight: 500;
-  padding: 2px 7px;
+  font-weight: 600;
+  padding: 3px 8px;
   border-radius: 20px;
-  margin-top: 3px;
+  margin-top: 4px;
   display: inline-block;
   width: fit-content;
 }
 
 .roleBadge[data-role='super_admin'] {
-  background: #fef3c7;
+  background: var(--warning-light);
   color: #92400e;
 }
 
 .roleBadge[data-role='admin'] {
-  background: #dbeafe;
-  color: #1e40af;
+  background: var(--secondary-light);
+  color: var(--secondary-dark);
 }
 
 .roleBadge[data-role='employee'] {
-  background: #d1fae5;
+  background: var(--success-light);
   color: #065f46;
 }
 
@@ -163,20 +200,116 @@
 .logoutBtn {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  background: #f1f5f9;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  gap: 7px;
+  padding: 9px 16px;
+  background: var(--gray-100);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
   font-size: 13px;
-  font-weight: 500;
-  color: #475569;
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  font-weight: 600;
+  color: var(--gray-700);
+  transition: all var(--transition-fast);
 }
 
 .logoutBtn:hover {
-  background: #fee2e2;
+  background: var(--danger-light);
   border-color: #fca5a5;
   color: #b91c1c;
+}
+
+.logoutBtn:active {
+  transform: scale(0.97);
+}
+
+.logoutText {
+  display: inline;
+}
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE STYLES
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Tablet (< 1024px) ─────────────────────────────── */
+@media (max-width: 1024px) {
+  .hamburger {
+    display: flex; /* Show hamburger on tablet and below */
+  }
+
+  .navbar {
+    padding: 0 16px;
+    gap: 12px;
+  }
+
+  .storeBanner {
+    padding: 5px 10px;
+    gap: 8px;
+  }
+
+  .storeText {
+    max-width: 180px;
+  }
+
+  .storeName {
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .storeAddr {
+    font-size: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .userMeta {
+    display: none; /* Hide user name on tablet */
+  }
+
+  .logoutText {
+    display: none; /* Show only icon on tablet */
+  }
+
+  .logoutBtn {
+    padding: 9px;
+    min-width: 40px;
+    justify-content: center;
+  }
+}
+
+/* ── Mobile (< 640px) ──────────────────────────────── */
+@media (max-width: 640px) {
+  .navbar {
+    padding: 0 12px;
+    gap: 8px;
+  }
+
+  .brand {
+    gap: 8px;
+  }
+
+  .logoMark {
+    width: 34px;
+    height: 34px;
+    font-size: 16px;
+  }
+
+  .brandName {
+    font-size: 16px;
+  }
+
+  /* Hide store banner on very small screens */
+  .storeBanner {
+    display: none;
+  }
+
+  .avatarWrap {
+    display: none; /* Hide avatar on mobile */
+  }
+
+  .logoutBtn {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
 }

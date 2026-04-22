@@ -123,11 +123,11 @@ export default function AdminEmployees() {
               <tr className={styles.emptyRow}><td colSpan={5}>No employees yet. Click "New Employee" to add one.</td></tr>
             ) : employees.map((emp) => (
               <tr key={emp.id}>
-                <td><strong>{emp.name}</strong></td>
-                <td>{emp.username}</td>
-                <td>{emp.mobile}</td>
-                <td>{getStoreName(emp.storeId)}</td>
-                <td>
+                <td data-label="Name"><strong>{emp.name}</strong></td>
+                <td data-label="Username">{emp.username}</td>
+                <td data-label="Mobile">{emp.mobile}</td>
+                <td data-label="Assigned Store">{getStoreName(emp.storeId)}</td>
+                <td data-label="Actions">
                   <div className={styles.tdActions}>
                     <button className={styles.editBtn} onClick={() => openEdit(emp)}>Edit</button>
                     <button className={styles.deleteBtn} onClick={() => handleDelete(emp.id)}>Delete</button>
