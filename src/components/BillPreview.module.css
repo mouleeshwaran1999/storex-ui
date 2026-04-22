@@ -1,0 +1,292 @@
+/* ══════════════════════════════════════════════════════════
+   BillPreview.module.css
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Overlay ───────────────────────────────────────────── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Modal card ────────────────────────────────────────── */
+.modal {
+  background: #fff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 680px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+  animation: slideUp 0.2s ease;
+  overflow: hidden;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ── Modal header ──────────────────────────────────────── */
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--gray-100);
+  flex-shrink: 0;
+}
+
+.modalTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gray-900);
+  letter-spacing: -0.2px;
+}
+
+.closeBtn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gray-100);
+  border: none;
+  border-radius: 8px;
+  color: var(--gray-600);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.closeBtn:hover {
+  background: var(--gray-200);
+  color: var(--gray-900);
+}
+
+/* ── Modal body (scrollable) ───────────────────────────── */
+.modalBody {
+  padding: 32px 32px 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* ── Store header ──────────────────────────────────────── */
+.storeHeader {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.storeLogo {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  border-radius: 12px;
+  display: block;
+  margin: 0 auto 12px;
+  background: var(--gray-50);
+  padding: 4px;
+  border: 1px solid var(--gray-100);
+}
+
+.storeName {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 4px;
+}
+
+.storeMeta {
+  font-size: 13px;
+  color: var(--gray-500);
+  line-height: 1.5;
+}
+
+/* ── Divider ───────────────────────────────────────────── */
+.divider {
+  border: none;
+  border-top: 1px solid var(--gray-100);
+  margin: 20px 0;
+}
+
+/* ── Bill meta rows ────────────────────────────────────── */
+.metaRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.metaLabel {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gray-400);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.metaValue {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-800);
+}
+
+/* ── Items table ───────────────────────────────────────── */
+.itemTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 4px;
+}
+
+.itemTable thead tr {
+  background: var(--primary);
+}
+
+.itemTable thead th {
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.3px;
+}
+
+.itemTable tbody td {
+  padding: 11px 12px;
+  font-size: 13px;
+  color: var(--gray-700);
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.itemTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.itemTable tbody tr:hover td {
+  background: var(--gray-50);
+}
+
+/* ── Grand total ───────────────────────────────────────── */
+.totalRow {
+  text-align: right;
+  font-size: 17px;
+  color: var(--gray-700);
+  padding: 16px 0 0;
+  border-top: 2px solid var(--gray-200);
+  margin-top: 4px;
+}
+
+.totalRow strong {
+  color: var(--gray-900);
+  font-size: 20px;
+  font-weight: 800;
+}
+
+/* ── Footer note ───────────────────────────────────────── */
+.footerNote {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--gray-400);
+  font-style: italic;
+  padding-top: 16px;
+  border-top: 1px dashed var(--gray-200);
+}
+
+/* ── Modal footer (action bar) ─────────────────────────── */
+.modalFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-top: 1px solid var(--gray-100);
+  background: var(--gray-50);
+  flex-shrink: 0;
+  gap: 12px;
+}
+
+.footerActions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Close (ghost) */
+.closeAction {
+  padding: 9px 18px;
+  background: #fff;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gray-600);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.closeAction:hover {
+  background: var(--gray-100);
+  border-color: var(--gray-300);
+}
+
+/* Print */
+.printBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px;
+  background: #fff;
+  border: 1.5px solid var(--gray-300);
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gray-700);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.printBtn:hover {
+  background: var(--gray-50);
+  border-color: var(--gray-400);
+}
+
+/* Download PDF */
+.downloadBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px;
+  background: var(--primary);
+  border: none;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.downloadBtn:hover {
+  background: var(--primary-dark);
+}
+
+@media (max-width: 600px) {
+  .modal { max-height: 100vh; border-radius: 0; }
+  .overlay { padding: 0; align-items: flex-end; }
+  .modalBody { padding: 24px 20px; }
+  .modalFooter { flex-wrap: wrap; }
+}
