@@ -1,0 +1,245 @@
+/* ═══════════════════════════════════════════════════════
+   CustomSelect.module.css — Generic custom dropdown
+   ═══════════════════════════════════════════════════════ */
+
+/* Dropdown Container */
+.dropdown {
+  position: relative;
+  width: 100%;
+}
+
+.dropdown.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Dropdown Button */
+.dropdownBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--white);
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius);
+  font-size: 14px;
+  color: var(--gray-900);
+  text-align: left;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.dropdownBtn:hover:not(:disabled) {
+  border-color: var(--gray-300);
+  background: var(--gray-50);
+}
+
+.dropdownBtn:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.1);
+}
+
+.dropdownBtn:disabled {
+  cursor: not-allowed;
+  background: var(--gray-100);
+}
+
+.dropdownBtnOpen {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.1);
+}
+
+.dropdownBtnText {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Selected Value Display */
+.selectedValue {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.optionLabel {
+  font-weight: 500;
+  color: var(--gray-900);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.optionDescription {
+  font-size: 12px;
+  color: var(--gray-600);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.placeholder {
+  color: var(--gray-400);
+  font-weight: 400;
+}
+
+/* Chevron Icon */
+.chevron {
+  flex-shrink: 0;
+  color: var(--gray-500);
+  transition: transform var(--transition-fast);
+  font-size: 10px;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+/* Dropdown Menu */
+.dropdownMenu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  max-height: 280px;
+  overflow-y: auto;
+  z-index: 100;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scrollbar */
+.dropdownMenu::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dropdownMenu::-webkit-scrollbar-track {
+  background: var(--gray-100);
+  border-radius: 3px;
+}
+
+.dropdownMenu::-webkit-scrollbar-thumb {
+  background: var(--gray-300);
+  border-radius: 3px;
+}
+
+.dropdownMenu::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-400);
+}
+
+/* Empty State */
+.emptyState {
+  padding: 20px;
+  text-align: center;
+  color: var(--gray-500);
+  font-size: 14px;
+}
+
+/* Dropdown Option */
+.dropdownOption {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.dropdownOption:last-child {
+  border-bottom: none;
+}
+
+.dropdownOption:hover {
+  background: var(--gray-50);
+}
+
+.dropdownOption:active {
+  background: var(--gray-100);
+}
+
+/* Active Option */
+.dropdownOptionActive {
+  background: var(--primary-light);
+  border-left: 3px solid var(--primary);
+}
+
+.dropdownOptionActive:hover {
+  background: rgba(13, 148, 136, 0.15);
+}
+
+/* Option Content */
+.optionContent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Checkmark */
+.checkmark {
+  flex-shrink: 0;
+  color: var(--primary);
+  font-weight: bold;
+}
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE STYLES
+   ═══════════════════════════════════════════════════════ */
+
+@media (max-width: 640px) {
+  .dropdownBtn {
+    padding: 14px 16px;
+    font-size: 15px;
+    min-height: 48px;
+  }
+
+  .dropdownMenu {
+    max-height: 240px;
+  }
+
+  .dropdownOption {
+    padding: 14px 16px;
+  }
+
+  .optionLabel {
+    font-size: 15px;
+  }
+
+  .optionDescription {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 400px) {
+  .dropdownMenu {
+    max-height: 200px;
+  }
+
+  .optionDescription {
+    font-size: 11px;
+  }
+}
