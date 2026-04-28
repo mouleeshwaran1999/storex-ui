@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useShop } from '../context/ShopContext';
 import Navbar from './Navbar';
 import styles from './Layout.module.css';
 
@@ -56,18 +55,8 @@ const NAV_CONFIG = {
   ],
 };
 
-/**
- * Layout — Main application layout with sidebar navigation
- * 
- * Features:
- * - Store name displayed at the top of sidebar (for employees)
- * - Navigation links based on user role
- * - Copyright footer at the bottom of sidebar
- * - Responsive: fixed sidebar on desktop, drawer on tablet/mobile
- */
 export default function Layout() {
   const { user } = useAuth();
-  const { shop } = useShop();
   const links = NAV_CONFIG[user?.role] || [];
   
   // Mobile sidebar state
@@ -106,48 +95,21 @@ export default function Layout() {
       <div className={styles.body}>
         {/* Sidebar */}
         <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ''}`}>
-          <div className={styles.sidebarContent}>
-            {/* Store Name Header (Employee only - moved from top navbar) */}
-            {user?.role === 'employee' && shop && (
-              <div className={styles.storeHeader}>
-                {shop.logo ? (
-                  <img src={shop.logo} alt={shop.name} className={styles.storeLogo} />
-                ) : (
-                  <div className={styles.storeLogoPlaceholder}>
-                    {shop.name?.[0]?.toUpperCase() ?? 'S'}
-                  </div>
-                )}
-                <div className={styles.storeInfo}>
-                  <h2 className={styles.storeName}>{shop.name}</h2>
-                  <p className={styles.storeAddress}>{shop.address}</p>
-                </div>
-              </div>
-            )}
-
-            {/* Navigation Links */}
-            <nav className={styles.nav}>
-              {links.map((link) => (
-                <NavLink
-                  key={link.to}
-                  to={link.to}
-                  onClick={handleLinkClick}
-                  className={({ isActive }) =>
-                    `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`
-                  }
-                >
-                  <span className={styles.navIcon}>{link.icon}</span>
-                  <span>{link.label}</span>
-                </NavLink>
-              ))}
-            </nav>
-
-            {/* Copyright Footer (sticky at bottom) */}
-            <footer className={styles.sidebarFooter}>
-              <p className={styles.copyright}>
-                Copyright © 2026, Mouleeshwaran.Pvt Ltd. All rights reserved.
-              </p>
-            </footer>
-          </div>
+          <nav className={styles.nav}>
+            {links.map((link) => (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                onClick={handleLinkClick}
+                className={({ isActive }) =>
+                  `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`
+                }
+              >
+                <span className={styles.navIcon}>{link.icon}</span>
+                <span>{link.label}</span>
+              </NavLink>
+            ))}
+          </nav>
         </aside>
 
         {/* Scrollable main content */}

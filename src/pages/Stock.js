@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { getProducts, adjustStock } from '../services/employeeService';
-import ProductDropdown from '../components/ProductDropdown';
-import CustomSelect from '../components/CustomSelect';
 import styles from './Page.module.css';
 
 export default function Stock() {
@@ -68,24 +66,31 @@ export default function Stock() {
           <div className={styles.adjustRow}>
             <div className={styles.field}>
               <label className={styles.fieldLabel}>Product</label>
-              <ProductDropdown
+              <select
+                className={styles.fieldSelect}
                 value={productId}
-                options={products}
-                onChange={setProductId}
-                placeholder="— Select a product —"
-              />
+                onChange={(e) => setProductId(e.target.value)}
+                required
+              >
+                <option value="">— Select a product —</option>
+                {products.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name} (Stock: {p.stock})
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className={styles.field}>
               <label className={styles.fieldLabel}>Type</label>
-              <CustomSelect
+              <select
+                className={styles.fieldSelect}
                 value={type}
-                onChange={setType}
-                options={[
-                  { value: 'increase', label: '➕ Increase' },
-                  { value: 'decrease', label: '➖ Decrease' }
-                ]}
-              />
+                onChange={(e) => setType(e.target.value)}
+              >
+                <option value="increase">➕ Increase</option>
+                <option value="decrease">➖ Decrease</option>
+              </select>
             </div>
 
             <div className={styles.field}>

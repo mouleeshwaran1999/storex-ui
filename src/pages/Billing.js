@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { getProducts, createBill, getBills } from '../services/employeeService';
 import { useShop } from '../context/ShopContext';
 import BillPreview from '../components/BillPreview';
-import ProductDropdown from '../components/ProductDropdown';
 import styles from './Page.module.css';
 
 export default function Billing() {
@@ -118,13 +117,15 @@ export default function Billing() {
             const product = products.find((p) => p.id === item.productId);
             return (
               <div key={idx} className={styles.cartRow}>
-                {/* Custom dropdown replacing native <select> */}
-                <ProductDropdown
-                  value={item.productId}
-                  options={products}
-                  onChange={(selectedId) => updateRow(idx, 'productId', selectedId)}
-                  placeholder="Select product"
-                />
+                <select className={styles.cartSelect} value={item.productId}
+                  onChange={(e) => updateRow(idx, 'productId', e.target.value)} required>
+                  <option value="">Select product</option>
+                  {products.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name} - Rs.{Number(p.price).toFixed(2)} (Stock: {p.stock})
+                    </option>
+                  ))}
+                </select>
                 <input type="number" min="1" max={product ? product.stock : 9999}
                   value={item.quantity} onChange={(e) => updateRow(idx, 'quantity', e.target.value)}
                   placeholder="Qty" required />

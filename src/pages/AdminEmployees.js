@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import SideDrawer from '../components/SideDrawer';
-import CustomSelect from '../components/CustomSelect';
 import {
   getEmployees, createEmployee, updateEmployee, deleteEmployee,
   getStores,
@@ -179,16 +178,12 @@ export default function AdminEmployees() {
 
           <div className={styles.field}>
             <label className={styles.fieldLabel}>Assign to Store</label>
-            <CustomSelect
-              name="storeId"
-              value={form.storeId}
-              onChange={(value) => setForm((f) => ({ ...f, storeId: value }))}
-              options={[
-                { value: '', label: '— No Store (unassigned) —' },
-                ...stores.map((s) => ({ value: s.id, label: s.name }))
-              ]}
-              placeholder="Select a store"
-            />
+            <select name="storeId" className={styles.fieldSelect} value={form.storeId} onChange={handleChange}>
+              <option value="">— No Store (unassigned) —</option>
+              {stores.map((s) => (
+                <option key={s.id} value={s.id}>{s.name}</option>
+              ))}
+            </select>
           </div>
         </form>
       </SideDrawer>
