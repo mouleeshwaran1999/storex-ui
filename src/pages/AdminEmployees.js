@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import SideDrawer from '../components/SideDrawer';
+import ConfirmDialog from '../components/ConfirmDialog';
 import {
   getEmployees, createEmployee, updateEmployee, deleteEmployee,
   getStores,
@@ -18,6 +19,8 @@ export default function AdminEmployees() {
   const [form, setForm] = useState(EMPTY);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [confirmId, setConfirmId] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   const load = () => {
     setLoading(true);
@@ -39,6 +42,20 @@ export default function AdminEmployees() {
   const openEdit = (emp) => {
     setEditingId(emp.id);
     setForm({ name: emp.name, username: emp.username, mobile: emp.mobile, password: '', storeId: emp.storeId || '' });
+    setError('');
+    setDrawerOpen(true);
+  };
+
+  const openCopy = (emp) => {
+    // Duplicate row as a new employee — keep name + store, clear unique fields.
+    setEditingId(null);
+    setForm({
+      name: `${emp.name} (copy)`,
+      username: '',
+      mobile: '',
+      password: '',
+      storeId: emp.storeId || '',
+    });
     setError('');
     setDrawerOpen(true);
   };
@@ -68,15 +85,26 @@ export default function AdminEmployees() {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Delete this employee? This cannot be undone.')) return;
+  const handleDelete = (id) => {
+    setError('');
+    setConfirmId(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!confirmId) return;
+    setDeleting(true);
     try {
-      await deleteEmployee(id);
+      await deleteEmployee(confirmId);
+      setConfirmId(null);
       load();
     } catch {
       setError('Failed to delete employee');
+    } finally {
+      setDeleting(false);
     }
   };
+
+  const employeeToDelete = employees.find((e) => e.id === confirmId);
 
   const getStoreName = (id) => stores.find((s) => s.id === id)?.name || <span style={{ color: '#94a3b8', fontStyle: 'italic' }}>Unassigned</span>;
 
@@ -130,6 +158,7 @@ export default function AdminEmployees() {
                 <td data-label="Actions">
                   <div className={styles.tdActions}>
                     <button className={styles.editBtn} onClick={() => openEdit(emp)}>Edit</button>
+                    <button className={styles.copyBtn} onClick={() => openCopy(emp)}>Copy</button>
                     <button className={styles.deleteBtn} onClick={() => handleDelete(emp.id)}>Delete</button>
                   </div>
                 </td>
@@ -187,6 +216,21 @@ export default function AdminEmployees() {
           </div>
         </form>
       </SideDrawer>
+
+      <ConfirmDialog
+        isOpen={confirmId !== null}
+        title="Delete employee?"
+        message={
+          employeeToDelete
+            ? <>This will permanently delete <strong>{employeeToDelete.name}</strong>. This action cannot be undone.</>
+            : 'This action cannot be undone.'
+        }
+        confirmLabel="Delete"
+        tone="danger"
+        busy={deleting}
+        onConfirm={confirmDelete}
+        onCancel={() => !deleting && setConfirmId(null)}
+      />
     </div>
   );
 }

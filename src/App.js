@@ -11,6 +11,7 @@ import AdminEmployees from './pages/AdminEmployees';
 import Products from './pages/Products';
 import Stock from './pages/Stock';
 import Billing from './pages/Billing';
+import Report from './pages/Report';
 import Layout from './components/Layout';
 
 export default function App() {
@@ -49,6 +50,7 @@ export default function App() {
               }
             >
               <Route path="stores" element={<AdminStores />} />
+              <Route path="stores/:storeId/report" element={<Report />} />
               <Route path="employees" element={<AdminEmployees />} />
               <Route index element={<Navigate to="stores" replace />} />
             </Route>
@@ -67,6 +69,7 @@ export default function App() {
               <Route path="products" element={<Products />} />
               <Route path="stock" element={<Stock />} />
               <Route path="billing" element={<Billing />} />
+              <Route path="report" element={<Report />} />
               <Route index element={<Navigate to="products" replace />} />
             </Route>
 

@@ -152,34 +152,52 @@
 }
 
 /* ── Table action buttons ────────────────────────────── */
-.editBtn {
-  padding: 7px 14px;
-  background: var(--primary-light);
-  border: 1px solid var(--primary-border);
+/* All action buttons share identical box metrics for a clean row. */
+.editBtn,
+.copyBtn,
+.deleteBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 78px;
+  height: 32px;
+  padding: 0 14px;
   border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 600;
-  color: var(--primary-dark);
+  line-height: 1;
+  cursor: pointer;
   transition: all var(--transition-fast);
+  box-sizing: border-box;
 }
 
+.editBtn {
+  background: var(--primary-light);
+  border: 1px solid var(--primary-border);
+  color: var(--primary-dark);
+}
 .editBtn:hover {
   background: var(--primary);
   color: var(--white);
   border-color: var(--primary);
 }
 
-.deleteBtn {
-  padding: 7px 14px;
-  background: var(--danger-light);
-  border: 1px solid #fca5a5;
-  border-radius: var(--radius-sm);
-  font-size: 13px;
-  font-weight: 600;
-  color: #b91c1c;
-  transition: all var(--transition-fast);
+.copyBtn {
+  background: #ecfeff;
+  border: 1px solid #67e8f9;
+  color: #0e7490;
+}
+.copyBtn:hover {
+  background: #06b6d4;
+  color: var(--white);
+  border-color: #06b6d4;
 }
 
+.deleteBtn {
+  background: var(--danger-light);
+  border: 1px solid #fca5a5;
+  color: #b91c1c;
+}
 .deleteBtn:hover {
   background: #ef4444;
   color: var(--white);
@@ -505,6 +523,36 @@
   font-size: 20px;
   font-weight: 800;
   color: var(--gray-900);
+}
+
+/* ── Bill summary breakdown ──────────────────────────── */
+.billSummary {
+  margin-top: 22px;
+  padding: 16px 20px;
+  background: var(--gray-50, #f8fafc);
+  border: 1px solid var(--gray-200, #e2e8f0);
+  border-radius: var(--radius-lg, 10px);
+  max-width: 360px;
+  margin-left: auto;
+}
+
+.billSummaryRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  font-size: 14px;
+  color: var(--gray-600, #475569);
+  font-weight: 500;
+}
+
+.billSummaryGrand {
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1.5px solid var(--gray-300, #cbd5e1);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--gray-900, #0f172a);
 }
 
 .shopBanner {
@@ -974,39 +1022,6 @@
   display: flex;
   gap: 8px;
   align-items: center;
-}
-
-/* ── Table action buttons ────────────────────────────── */
-.editBtn {
-  padding: 5px 12px;
-  background: var(--primary-light);
-  border: 1px solid var(--primary-border);
-  border-radius: var(--radius-sm);
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--primary-dark);
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.editBtn:hover {
-  background: #c7d2fe;
-}
-
-.deleteBtn {
-  padding: 5px 12px;
-  background: var(--danger-light);
-  border: 1px solid #fca5a5;
-  border-radius: var(--radius-sm);
-  font-size: 12px;
-  font-weight: 500;
-  color: #b91c1c;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.deleteBtn:hover {
-  background: #fecaca;
 }
 
 /* ── Empty state ─────────────────────────────────────── */

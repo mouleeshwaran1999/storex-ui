@@ -38,6 +38,11 @@ const Icons = {
       <rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>
     </svg>
   ),
+  report: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 3v18h18"/><path d="M7 15l4-4 4 4 5-7"/>
+    </svg>
+  ),
 };
 
 const NAV_CONFIG = {
@@ -52,30 +57,46 @@ const NAV_CONFIG = {
     { label: 'Products', to: '/app/products', icon: Icons.products },
     { label: 'Stock', to: '/app/stock', icon: Icons.stock },
     { label: 'Billing', to: '/app/billing', icon: Icons.billing },
+    { label: 'Report', to: '/app/report', icon: Icons.report },
   ],
 };
+
+const COLLAPSED_KEY = 'sms.sidebarCollapsed';
 
 export default function Layout() {
   const { user } = useAuth();
   const links = NAV_CONFIG[user?.role] || [];
-  
-  // Mobile sidebar state
+
+  // Mobile sidebar drawer (open/closed)
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  // Desktop collapsed (icon-only rail) — persisted
+  const [collapsed, setCollapsed] = useState(() => {
+    try { return localStorage.getItem(COLLAPSED_KEY) === '1'; } catch { return false; }
+  });
+
+  useEffect(() => {
+    try { localStorage.setItem(COLLAPSED_KEY, collapsed ? '1' : '0'); } catch {}
+  }, [collapsed]);
 
   // Lock body scroll when mobile sidebar is open
   useEffect(() => {
-    if (sidebarOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
+    document.body.style.overflow = sidebarOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
   }, [sidebarOpen]);
 
   // Close sidebar on route change (mobile)
-  const handleLinkClick = () => {
-    setSidebarOpen(false);
-  };
+  const handleLinkClick = () => setSidebarOpen(false);
+
+  const sidebarClass = [
+    styles.sidebar,
+    sidebarOpen ? styles.sidebarOpen : '',
+    collapsed ? styles.sidebarCollapsed : '',
+  ].filter(Boolean).join(' ');
+
+  const mainClass = [
+    styles.main,
+    collapsed ? styles.mainCollapsed : '',
+  ].filter(Boolean).join(' ');
 
   return (
     <div className={styles.shell}>
@@ -84,8 +105,8 @@ export default function Layout() {
 
       {/* Mobile overlay backdrop */}
       {sidebarOpen && (
-        <div 
-          className={styles.overlay} 
+        <div
+          className={styles.overlay}
           onClick={() => setSidebarOpen(false)}
           aria-hidden="true"
         />
@@ -94,26 +115,43 @@ export default function Layout() {
       {/* Below navbar: sidebar + main */}
       <div className={styles.body}>
         {/* Sidebar */}
-        <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ''}`}>
+        <aside className={sidebarClass}>
+          {/* Desktop collapse / expand toggle */}
+          <button
+            type="button"
+            className={styles.collapseBtn}
+            onClick={() => setCollapsed((v) => !v)}
+            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              {collapsed
+                ? <polyline points="9 18 15 12 9 6" />
+                : <polyline points="15 18 9 12 15 6" />}
+            </svg>
+          </button>
+
           <nav className={styles.nav}>
             {links.map((link) => (
               <NavLink
                 key={link.to}
                 to={link.to}
                 onClick={handleLinkClick}
+                title={collapsed ? link.label : undefined}
                 className={({ isActive }) =>
                   `${styles.navLink} ${isActive ? styles.navLinkActive : ''}`
                 }
               >
                 <span className={styles.navIcon}>{link.icon}</span>
-                <span>{link.label}</span>
+                <span className={styles.navLabel}>{link.label}</span>
               </NavLink>
             ))}
           </nav>
         </aside>
 
         {/* Scrollable main content */}
-        <main className={styles.main}>
+        <main className={mainClass}>
           <Outlet />
         </main>
       </div>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import SideDrawer from '../components/SideDrawer';
+import ConfirmDialog from '../components/ConfirmDialog';
 import { getAdmins, createAdmin, updateAdmin, deleteAdmin } from '../services/superAdminService';
 import styles from './Page.module.css';
 
@@ -14,6 +15,8 @@ export default function SuperAdminAdmins() {
   const [form, setForm] = useState(EMPTY);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [confirmId, setConfirmId] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   const load = () => {
     setLoading(true);
@@ -67,15 +70,26 @@ export default function SuperAdminAdmins() {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Delete this admin? This cannot be undone.')) return;
+  const handleDelete = (id) => {
+    setError('');
+    setConfirmId(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!confirmId) return;
+    setDeleting(true);
     try {
-      await deleteAdmin(id);
+      await deleteAdmin(confirmId);
+      setConfirmId(null);
       load();
     } catch {
       setError('Failed to delete admin');
+    } finally {
+      setDeleting(false);
     }
   };
+
+  const adminToDelete = admins.find((a) => a.id === confirmId);
 
   return (
     <div>
@@ -167,6 +181,21 @@ export default function SuperAdminAdmins() {
           </div>
         </form>
       </SideDrawer>
+
+      <ConfirmDialog
+        isOpen={confirmId !== null}
+        title="Delete admin?"
+        message={
+          adminToDelete
+            ? <>This will permanently delete <strong>{adminToDelete.name}</strong>. This action cannot be undone.</>
+            : 'This action cannot be undone.'
+        }
+        confirmLabel="Delete"
+        tone="danger"
+        busy={deleting}
+        onConfirm={confirmDelete}
+        onCancel={() => !deleting && setConfirmId(null)}
+      />
     </div>
   );
 }

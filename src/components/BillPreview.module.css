@@ -313,6 +313,124 @@
   transform: translateY(-1px);
 }
 
+/* ── Invoice header (new layout) ──────────────────────── */
+.invoiceHeader {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding-bottom: 18px;
+  border-bottom: 2px solid var(--gray-900, #0f172a);
+  margin-bottom: 22px;
+}
+
+.invoiceHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
+}
+
+.storeLogoSmall {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: var(--gray-50, #f8fafc);
+  padding: 4px;
+  border: 1px solid var(--gray-200, #e2e8f0);
+  flex-shrink: 0;
+}
+
+.storeNameLeft {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--gray-900, #0f172a);
+  letter-spacing: -0.3px;
+  margin: 0 0 4px;
+}
+
+.storeMetaLeft {
+  font-size: 12px;
+  color: var(--gray-600, #475569);
+  line-height: 1.55;
+  margin: 0;
+}
+
+.invoiceTag {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.invoiceTagLabel {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--primary, #6366f1);
+  letter-spacing: 1px;
+}
+
+.invoiceTagNum {
+  font-size: 11px;
+  color: var(--gray-500, #64748b);
+  margin-top: 2px;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  word-break: break-all;
+}
+
+/* ── Meta grid (Bill To / Date / Items) ───────────────── */
+.metaGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 0 0 22px;
+}
+
+.metaCard {
+  background: var(--gray-50, #f8fafc);
+  border: 1px solid var(--gray-200, #e2e8f0);
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+/* ── Totals summary box ──────────────────────────────── */
+.summary {
+  margin: 18px 0 0 auto;
+  width: 100%;
+  max-width: 300px;
+  padding: 14px 18px;
+  background: var(--gray-50, #f8fafc);
+  border: 1px solid var(--gray-200, #e2e8f0);
+  border-radius: 10px;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  font-size: 14px;
+  color: var(--gray-600, #475569);
+  font-weight: 500;
+}
+
+.summaryGrand {
+  margin-top: 6px;
+  padding-top: 10px;
+  border-top: 2px solid var(--gray-900, #0f172a);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--gray-900, #0f172a);
+}
+
+.summaryGrand span:last-child {
+  color: var(--primary, #6366f1);
+  font-size: 20px;
+}
+
 /* ═══════════════════════════════════════════════════════
    RESPONSIVE STYLES
    ═══════════════════════════════════════════════════════ */
@@ -488,5 +606,24 @@
 
   .modalFooter {
     padding: 14px 18px;
+  }
+
+  /* New invoice layout responsive */
+  .invoiceHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .invoiceTag {
+    text-align: left;
+  }
+
+  .metaGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .summary {
+    max-width: 100%;
   }
 }

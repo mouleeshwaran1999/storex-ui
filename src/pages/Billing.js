@@ -44,12 +44,25 @@ export default function Billing() {
     setCartItems((p) => p.filter((_, i) => i !== idx));
   };
 
+  // Product IDs from the API are numbers, but <select> option values are
+  // always strings — use loose equality so the row product is found.
+  const findProduct = (id) => products.find((x) => String(x.id) === String(id));
+
   const getRowSubtotal = (item) => {
-    const p = products.find((x) => x.id === item.productId);
+    const p = findProduct(item.productId);
     return p ? p.price * Number(item.quantity || 0) : 0;
   };
 
-  const getTotal = () => cartItems.reduce((s, i) => s + getRowSubtotal(i), 0);
+  const getRowGst = (item) => {
+    const p = findProduct(item.productId);
+    if (!p) return 0;
+    const gp = Number(p.gstPercent || 0);
+    return (p.price * Number(item.quantity || 0)) * gp / 100;
+  };
+
+  const getSubtotal = () => cartItems.reduce((s, i) => s + getRowSubtotal(i), 0);
+  const getGstTotal = () => cartItems.reduce((s, i) => s + getRowGst(i), 0);
+  const getTotal = () => getSubtotal() + getGstTotal();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -114,7 +127,8 @@ export default function Billing() {
           </div>
 
           {cartItems.map((item, idx) => {
-            const product = products.find((p) => p.id === item.productId);
+            const product = findProduct(item.productId);
+            const gp = Number(product?.gstPercent || 0);
             return (
               <div key={idx} className={styles.cartRow}>
                 <select className={styles.cartSelect} value={item.productId}
@@ -122,14 +136,23 @@ export default function Billing() {
                   <option value="">Select product</option>
                   {products.map((p) => (
                     <option key={p.id} value={p.id}>
-                      {p.name} - Rs.{Number(p.price).toFixed(2)} (Stock: {p.stock})
+                      {p.name} - Rs.{Number(p.price).toFixed(2)}
+                      {Number(p.gstPercent) > 0 ? ` (+${Number(p.gstPercent).toFixed(2)}% GST)` : ''}
+                      {' '}(Stock: {p.stock})
                     </option>
                   ))}
                 </select>
                 <input type="number" min="1" max={product ? product.stock : 9999}
                   value={item.quantity} onChange={(e) => updateRow(idx, 'quantity', e.target.value)}
                   placeholder="Qty" required />
-                <span className={styles.cartSubtotal}>Rs.{getRowSubtotal(item).toFixed(2)}</span>
+                <span className={styles.cartSubtotal}>
+                  Rs.{getRowSubtotal(item).toFixed(2)}
+                  {gp > 0 && (
+                    <small style={{ display: 'block', fontSize: 11, color: '#64748b', fontWeight: 500 }}>
+                      + Rs.{getRowGst(item).toFixed(2)} GST ({gp.toFixed(2)}%)
+                    </small>
+                  )}
+                </span>
                 <button type="button" className={styles.removeRowBtn}
                   onClick={() => removeRow(idx)} title="Remove row">x</button>
               </div>
@@ -137,7 +160,20 @@ export default function Billing() {
           })}
 
           <button type="button" className={styles.addItemBtn} onClick={addRow}>+ Add Item</button>
-          <div className={styles.totalRow}>Total: Rs.{getTotal().toFixed(2)}</div>
+          <div className={styles.billSummary}>
+            <div className={styles.billSummaryRow}>
+              <span>Subtotal</span>
+              <span>Rs.{getSubtotal().toFixed(2)}</span>
+            </div>
+            <div className={styles.billSummaryRow}>
+              <span>Total GST</span>
+              <span>Rs.{getGstTotal().toFixed(2)}</span>
+            </div>
+            <div className={`${styles.billSummaryRow} ${styles.billSummaryGrand}`}>
+              <span>Grand Total</span>
+              <span>Rs.{getTotal().toFixed(2)}</span>
+            </div>
+          </div>
           <div style={{ marginTop: 20 }}>
             <button type="submit" className={styles.addBtn} disabled={submitting}>
               {submitting ? 'Creating...' : 'Submit Bill'}
