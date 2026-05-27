@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import SideDrawer from '../components/SideDrawer';
+import ConfirmDialog from '../components/ConfirmDialog';
 import { getProducts, createProduct, updateProduct, deleteProduct } from '../services/employeeService';
 import styles from './Page.module.css';
 
-const EMPTY = { name: '', price: '', stock: '' };
+const EMPTY = { name: '', price: '', stock: '', gstPercent: '0' };
 const FORM_ID = 'product-form';
 
 export default function Products() {
@@ -14,6 +15,8 @@ export default function Products() {
   const [form, setForm] = useState(EMPTY);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [confirmId, setConfirmId] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   const load = () => {
     setLoading(true);
@@ -34,7 +37,21 @@ export default function Products() {
 
   const openEdit = (p) => {
     setEditingId(p.id);
-    setForm({ name: p.name, price: p.price, stock: p.stock });
+    setForm({ name: p.name, price: p.price, stock: p.stock, gstPercent: p.gstPercent ?? 0 });
+    setError('');
+    setDrawerOpen(true);
+  };
+
+  const openCopy = (p) => {
+    // Duplicate as a new product — keep all fields, prepend "(copy)" to the name
+    // so the unique-name check passes by default while still being editable.
+    setEditingId(null);
+    setForm({
+      name: `${p.name} (copy)`,
+      price: p.price,
+      stock: p.stock,
+      gstPercent: p.gstPercent ?? 0,
+    });
     setError('');
     setDrawerOpen(true);
   };
@@ -48,7 +65,12 @@ export default function Products() {
     setError('');
     setSaving(true);
     try {
-      const payload = { name: form.name, price: Number(form.price), stock: Number(form.stock) };
+      const payload = {
+        name: form.name,
+        price: Number(form.price),
+        stock: Number(form.stock),
+        gstPercent: Number(form.gstPercent) || 0,
+      };
       if (editingId) {
         await updateProduct(editingId, payload);
       } else {
@@ -63,15 +85,26 @@ export default function Products() {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Delete this product? This cannot be undone.')) return;
+  const handleDelete = (id) => {
+    setError('');
+    setConfirmId(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!confirmId) return;
+    setDeleting(true);
     try {
-      await deleteProduct(id);
+      await deleteProduct(confirmId);
+      setConfirmId(null);
       load();
     } catch {
       setError('Failed to delete product');
+    } finally {
+      setDeleting(false);
     }
   };
+
+  const productToDelete = products.find((p) => p.id === confirmId);
 
   const totalStock = products.reduce((sum, p) => sum + p.stock, 0);
   const lowStock = products.filter((p) => p.stock > 0 && p.stock < 5).length;
@@ -112,6 +145,7 @@ export default function Products() {
             <tr>
               <th>Product Name</th>
               <th>Price (₹)</th>
+              <th>GST %</th>
               <th>Stock</th>
               <th>Status</th>
               <th>Actions</th>
@@ -119,13 +153,14 @@ export default function Products() {
           </thead>
           <tbody>
             {loading ? (
-              <tr><td colSpan={5} style={{ textAlign: 'center', padding: '40px', color: '#94a3b8' }}>Loading…</td></tr>
+              <tr><td colSpan={6} style={{ textAlign: 'center', padding: '40px', color: '#94a3b8' }}>Loading…</td></tr>
             ) : products.length === 0 ? (
-              <tr className={styles.emptyRow}><td colSpan={5}>No products yet. Click "New Product" to add one.</td></tr>
+              <tr className={styles.emptyRow}><td colSpan={6}>No products yet. Click "New Product" to add one.</td></tr>
             ) : products.map((p) => (
               <tr key={p.id}>
                 <td data-label="Product Name"><strong>{p.name}</strong></td>
                 <td data-label="Price (₹)">₹{Number(p.price).toFixed(2)}</td>
+                <td data-label="GST %">{Number(p.gstPercent ?? 0).toFixed(2)}%</td>
                 <td data-label="Stock">{p.stock}</td>
                 <td data-label="Status">
                   <span className={
@@ -139,6 +174,7 @@ export default function Products() {
                 <td data-label="Actions">
                   <div className={styles.tdActions}>
                     <button className={styles.editBtn} onClick={() => openEdit(p)}>Edit</button>
+                    <button className={styles.copyBtn} onClick={() => openCopy(p)}>Copy</button>
                     <button className={styles.deleteBtn} onClick={() => handleDelete(p.id)}>Delete</button>
                   </div>
                 </td>
@@ -172,12 +208,36 @@ export default function Products() {
           </div>
 
           <div className={styles.field}>
+            <label className={styles.fieldLabel}>GST Percentage (%)</label>
+            <input name="gstPercent" type="number" min="0" max="100" step="0.01" className={styles.fieldInput}
+              value={form.gstPercent} onChange={handleChange} placeholder="e.g. 5, 12, 18" />
+            <small style={{ color: '#64748b', fontSize: 12, marginTop: 4, display: 'block' }}>
+              Applied on top of the selling price during billing.
+            </small>
+          </div>
+
+          <div className={styles.field}>
             <label className={styles.fieldLabel}>Initial Stock Quantity</label>
             <input name="stock" type="number" min="0" className={styles.fieldInput}
               value={form.stock} onChange={handleChange} placeholder="0" />
           </div>
         </form>
       </SideDrawer>
+
+      <ConfirmDialog
+        isOpen={confirmId !== null}
+        title="Delete product?"
+        message={
+          productToDelete
+            ? <>This will permanently delete <strong>{productToDelete.name}</strong>. This action cannot be undone.</>
+            : 'This action cannot be undone.'
+        }
+        confirmLabel="Delete"
+        tone="danger"
+        busy={deleting}
+        onConfirm={confirmDelete}
+        onCancel={() => !deleting && setConfirmId(null)}
+      />
     </div>
   );
 }

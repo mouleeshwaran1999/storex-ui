@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SideDrawer from '../components/SideDrawer';
+import ConfirmDialog from '../components/ConfirmDialog';
 import {
   getStores, createStore, updateStore, deleteStore,
   getEmployees,
@@ -19,7 +21,10 @@ export default function AdminStores() {
   const [form, setForm] = useState(EMPTY);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [confirmId, setConfirmId] = useState(null);
+  const [deleting, setDeleting] = useState(false);
   const fileInputRef = useRef(null);
+  const navigate = useNavigate();
 
   const load = () => {
     setLoading(true);
@@ -95,15 +100,26 @@ export default function AdminStores() {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Delete this store? This cannot be undone.')) return;
+  const handleDelete = (id) => {
+    setError('');
+    setConfirmId(id);
+  };
+
+  const confirmDelete = async () => {
+    if (!confirmId) return;
+    setDeleting(true);
     try {
-      await deleteStore(id);
+      await deleteStore(confirmId);
+      setConfirmId(null);
       load();
     } catch {
       setError('Failed to delete store');
+    } finally {
+      setDeleting(false);
     }
   };
+
+  const storeToDelete = stores.find((s) => s.id === confirmId);
 
   const getEmpNames = (ids) =>
     employees.filter((e) => ids?.includes(e.id)).map((e) => e.name).join(', ') || '—';
@@ -160,6 +176,13 @@ export default function AdminStores() {
                 <td data-label="Employees">{getEmpNames(s.employeeIds)}</td>
                 <td data-label="Actions">
                   <div className={styles.tdActions}>
+                    <button
+                      className={styles.copyBtn}
+                      onClick={() => navigate(`/admin/stores/${s.id}/report`)}
+                      title="View report for this store"
+                    >
+                      Report
+                    </button>
                     <button className={styles.editBtn} onClick={() => openEdit(s)}>Edit</button>
                     <button className={styles.deleteBtn} onClick={() => handleDelete(s.id)}>Delete</button>
                   </div>
@@ -259,6 +282,21 @@ export default function AdminStores() {
           </div>
         </form>
       </SideDrawer>
+
+      <ConfirmDialog
+        isOpen={confirmId !== null}
+        title="Delete store?"
+        message={
+          storeToDelete
+            ? <>This will permanently delete <strong>{storeToDelete.name}</strong>. Employees assigned to it will be unassigned. This action cannot be undone.</>
+            : 'This action cannot be undone.'
+        }
+        confirmLabel="Delete"
+        tone="danger"
+        busy={deleting}
+        onConfirm={confirmDelete}
+        onCancel={() => !deleting && setConfirmId(null)}
+      />
     </div>
   );
 }
