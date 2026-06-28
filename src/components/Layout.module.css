@@ -50,64 +50,12 @@
   transition: transform var(--transition-slow), width var(--transition-slow);
 }
 
-/* Collapsed (icon-only) rail on desktop */
-.sidebarCollapsed {
-  width: 72px;
-}
-
-.sidebarCollapsed .navLabel {
-  display: none;
-}
-
-.sidebarCollapsed .navLink {
-  justify-content: center;
-  padding: 12px 0;
-}
-
-.sidebarCollapsed .nav {
-  padding: 0 8px;
-}
-
-/* Collapse / expand toggle button */
-.collapseBtn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--gray-700);
-  border: 1px solid var(--gray-600);
-  border-radius: 6px;
-  color: var(--gray-200);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  z-index: 2;
-}
-
-.collapseBtn:hover {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: var(--white);
-}
-
-.sidebarCollapsed .collapseBtn {
-  right: 50%;
-  transform: translateX(50%);
-}
-
-.sidebarCollapsed .nav {
-  margin-top: 36px;
-}
-
 .nav {
   display: flex;
   flex-direction: column;
   gap: 4px;
   padding: 0 12px;
-  margin-top: 36px;
+  margin-top: 8px;
 }
 
 /* Smooth scrollbar for sidebar */
@@ -190,10 +138,6 @@
   min-height: calc(100vh - var(--navbar-height));
   overflow-y: auto;
   transition: margin-left var(--transition-slow);
-}
-
-.mainCollapsed {
-  margin-left: 72px;
 }
 
 /* ═══════════════════════════════════════════════════════

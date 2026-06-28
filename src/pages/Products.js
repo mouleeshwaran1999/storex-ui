@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import SideDrawer from '../components/SideDrawer';
 import ConfirmDialog from '../components/ConfirmDialog';
-import { getProducts, createProduct, updateProduct, deleteProduct } from '../services/employeeService';
+import Pagination from '../components/Pagination';
+import { getProductsPaged, createProduct, updateProduct, deleteProduct } from '../services/employeeService';
 import styles from './Page.module.css';
 
 const EMPTY = { name: '', price: '', stock: '', gstPercent: '0' };
@@ -10,6 +11,8 @@ const FORM_ID = 'product-form';
 export default function Products() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState({ total: 0, pages: 0 });
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(EMPTY);
@@ -18,15 +21,15 @@ export default function Products() {
   const [confirmId, setConfirmId] = useState(null);
   const [deleting, setDeleting] = useState(false);
 
-  const load = () => {
+  const load = useCallback(() => {
     setLoading(true);
-    getProducts()
-      .then(setProducts)
+    getProductsPaged(page)
+      .then((r) => { setProducts(r.data); setPagination({ total: r.total, pages: r.pages }); })
       .catch(() => setError('Failed to load products'))
       .finally(() => setLoading(false));
-  };
+  }, [page]);
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => { load(); }, [load]);
 
   const openAdd = () => {
     setEditingId(null);
@@ -122,7 +125,7 @@ export default function Products() {
 
       <div className={styles.statsRow}>
         <div className={styles.statCard}>
-          <span className={styles.statNumber}>{products.length}</span>
+          <span className={styles.statNumber}>{pagination.total}</span>
           <span className={styles.statLabel}>Products</span>
         </div>
         <div className={styles.statCard}>
@@ -182,6 +185,7 @@ export default function Products() {
             ))}
           </tbody>
         </table>
+        <Pagination page={page} pages={pagination.pages} total={pagination.total} limit={25} onPageChange={setPage} />
       </div>
 
       {/* Side Drawer */}

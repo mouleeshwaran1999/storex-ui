@@ -196,43 +196,398 @@
   color: #065f46;
 }
 
-/* ── Logout button ───────────────────────────────── */
-.logoutBtn {
+/* ── Settings gear button ─────────────────────────── */
+.settingsWrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.settingsBtn {
   display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 9px 16px;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
   background: var(--gray-100);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  color: var(--gray-600);
+  transition: all var(--transition-fast);
+}
+
+.settingsBtn:hover {
+  background: var(--primary-light);
+  border-color: var(--primary-border);
+  color: var(--primary-dark);
+}
+
+.settingsBtn:active {
+  transform: scale(0.95);
+}
+
+/* ── Dropdown menu ───────────────────────────────── */
+.dropdownMenu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 200px;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  z-index: 200;
+  overflow: hidden;
+  animation: dropIn 0.12s ease;
+}
+
+@keyframes dropIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.dropdownItem,
+.dropdownItemDanger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.dropdownItem {
+  color: var(--gray-700);
+}
+
+.dropdownItem:hover {
+  background: var(--gray-100);
+  color: var(--gray-900);
+}
+
+.dropdownItemDanger {
+  color: #b91c1c;
+}
+
+.dropdownItemDanger:hover {
+  background: var(--danger-light);
+}
+
+.dropdownDivider {
+  height: 1px;
+  background: var(--gray-200);
+  margin: 4px 0;
+}
+
+/* ── Change Password modal ───────────────────────── */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  padding: 16px;
+}
+
+.modal {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  width: 100%;
+  max-width: 400px;
+  overflow: hidden;
+  animation: modalIn 0.18s ease;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.modalTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gray-900);
+}
+
+.modalClose {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: none;
+  border: none;
+  color: var(--gray-500);
+  transition: all var(--transition-fast);
+}
+
+.modalClose:hover {
+  background: var(--gray-100);
+  color: var(--gray-900);
+}
+
+.modalBody {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--gray-200);
+  background: var(--gray-50);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fieldLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
+.fieldInput {
+  padding: 9px 12px;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius);
+  font-size: 14px;
+  color: var(--gray-900);
+  background: var(--white);
+  transition: border-color var(--transition-fast);
+  outline: none;
+}
+
+.fieldInput:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.alertError {
+  background: var(--danger-light);
+  border: 1px solid #fca5a5;
+  color: #b91c1c;
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.btnPrimary {
+  padding: 9px 20px;
+  background: var(--primary);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btnPrimary:hover:not(:disabled) {
+  background: var(--primary-dark);
+}
+
+.btnPrimary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btnSecondary {
+  padding: 9px 20px;
+  background: var(--gray-100);
+  color: var(--gray-700);
   border: 1px solid var(--gray-200);
   border-radius: var(--radius);
   font-size: 13px;
   font-weight: 600;
-  color: var(--gray-700);
+  cursor: pointer;
   transition: all var(--transition-fast);
 }
 
-.logoutBtn:hover {
-  background: var(--danger-light);
-  border-color: #fca5a5;
-  color: #b91c1c;
+.btnSecondary:hover {
+  background: var(--gray-200);
 }
 
-.logoutBtn:active {
-  transform: scale(0.97);
+.successMsg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  color: var(--gray-700);
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
 }
 
-.logoutText {
-  display: inline;
+/* ── Profile modal (wider than change-pw) ────────── */
+.profileModal {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  width: 100%;
+  max-width: 460px;
+  overflow: hidden;
+  animation: modalIn 0.18s ease;
 }
 
-/* ═══════════════════════════════════════════════════════
-   RESPONSIVE STYLES
-   ═══════════════════════════════════════════════════════ */
+/* ── Profile photo upload ────────────────────────── */
+.photoSection {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 4px 0 8px;
+}
+
+.photoWrap {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  cursor: pointer;
+  flex-shrink: 0;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.profilePhotoImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+.photoInitials {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+  color: var(--white);
+  font-size: 26px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.photoOverlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.photoWrap:hover .photoOverlay {
+  opacity: 1;
+}
+
+.photoMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.photoName {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--gray-900);
+}
+
+.photoHint {
+  font-size: 12px;
+  color: var(--gray-500);
+}
+
+/* ── Navbar avatar when profile photo is set ─────── */
+.avatarPhoto {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: var(--shadow-xs);
+  display: block;
+}
+
+/* ── Remove photo link ───────────────────────────── */
+.removePhotoLink {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 12px;
+  color: var(--danger);
+  cursor: pointer;
+  text-decoration: underline;
+  font-weight: 500;
+  text-align: left;
+}
+.removePhotoLink:hover {
+  color: #dc2626;
+}
+
+/* ── Profile info row (username + role, read-only) ── */
+.profileInfo {
+  display: flex;
+  gap: 20px;
+  padding: 10px 14px;
+  background: var(--gray-50);
+  border-radius: var(--radius);
+  border: 1px solid var(--gray-200);
+}
+.profileInfoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.profileInfoLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gray-400);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.profileInfoValue {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-800);
+}
+
 
 /* ── Tablet (< 1024px) ─────────────────────────────── */
 @media (max-width: 1024px) {
   .hamburger {
-    display: flex; /* Show hamburger on tablet and below */
+    display: flex;
   }
 
   .navbar {
@@ -264,17 +619,7 @@
   }
 
   .userMeta {
-    display: none; /* Hide user name on tablet */
-  }
-
-  .logoutText {
-    display: none; /* Show only icon on tablet */
-  }
-
-  .logoutBtn {
-    padding: 9px;
-    min-width: 40px;
-    justify-content: center;
+    display: none;
   }
 }
 
@@ -299,17 +644,11 @@
     font-size: 16px;
   }
 
-  /* Hide store banner on very small screens */
   .storeBanner {
     display: none;
   }
 
   .avatarWrap {
-    display: none; /* Hide avatar on mobile */
-  }
-
-  .logoutBtn {
-    padding: 8px 12px;
-    font-size: 12px;
+    display: none;
   }
 }

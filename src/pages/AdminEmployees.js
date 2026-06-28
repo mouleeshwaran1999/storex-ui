@@ -1,19 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import SideDrawer from '../components/SideDrawer';
 import ConfirmDialog from '../components/ConfirmDialog';
+import Pagination from '../components/Pagination';
 import {
-  getEmployees, createEmployee, updateEmployee, deleteEmployee,
+  getEmployeesPaged, createEmployee, updateEmployee, deleteEmployee,
   getStores,
 } from '../services/adminService';
 import styles from './Page.module.css';
 
-const EMPTY = { name: '', username: '', mobile: '', password: '', storeId: '' };
+const EMPTY = {
+  name: '', username: '', mobile: '', password: '', storeId: '',
+  permissions: { products: true, stock: true, billing: true, report: true, customers: true },
+};
+const PERM_LABELS = [
+  { key: 'products',  label: 'Products'  },
+  { key: 'stock',     label: 'Stock'     },
+  { key: 'billing',   label: 'Billing'   },
+  { key: 'report',    label: 'Report'    },
+  { key: 'customers', label: 'Customers' },
+];
 const FORM_ID = 'employee-form';
 
 export default function AdminEmployees() {
   const [employees, setEmployees] = useState([]);
   const [stores, setStores] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState({ total: 0, pages: 0 });
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(EMPTY);
@@ -22,15 +35,20 @@ export default function AdminEmployees() {
   const [confirmId, setConfirmId] = useState(null);
   const [deleting, setDeleting] = useState(false);
 
-  const load = () => {
+  const load = useCallback(() => {
     setLoading(true);
-    Promise.all([getEmployees(), getStores()])
-      .then(([e, s]) => { setEmployees(e); setStores(s); })
+    getEmployeesPaged(page)
+      .then((r) => { setEmployees(r.data); setPagination({ total: r.total, pages: r.pages }); })
       .catch(() => setError('Failed to load data'))
       .finally(() => setLoading(false));
-  };
+  }, [page]);
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => { load(); }, [load]);
+
+  // Load stores once for the drawer dropdown
+  useEffect(() => {
+    getStores().then(setStores).catch(() => {});
+  }, []);
 
   const openAdd = () => {
     setEditingId(null);
@@ -41,7 +59,17 @@ export default function AdminEmployees() {
 
   const openEdit = (emp) => {
     setEditingId(emp.id);
-    setForm({ name: emp.name, username: emp.username, mobile: emp.mobile, password: '', storeId: emp.storeId || '' });
+    setForm({
+      name: emp.name, username: emp.username, mobile: emp.mobile,
+      password: '', storeId: emp.storeId || '',
+      permissions: {
+        products:  emp.permissions?.products  !== false,
+        stock:     emp.permissions?.stock     !== false,
+        billing:   emp.permissions?.billing   !== false,
+        report:    emp.permissions?.report    !== false,
+        customers: emp.permissions?.customers !== false,
+      },
+    });
     setError('');
     setDrawerOpen(true);
   };
@@ -51,10 +79,15 @@ export default function AdminEmployees() {
     setEditingId(null);
     setForm({
       name: `${emp.name} (copy)`,
-      username: '',
-      mobile: '',
-      password: '',
+      username: '', mobile: '', password: '',
       storeId: emp.storeId || '',
+      permissions: {
+        products:  emp.permissions?.products  !== false,
+        stock:     emp.permissions?.stock     !== false,
+        billing:   emp.permissions?.billing   !== false,
+        report:    emp.permissions?.report    !== false,
+        customers: emp.permissions?.customers !== false,
+      },
     });
     setError('');
     setDrawerOpen(true);
@@ -64,13 +97,20 @@ export default function AdminEmployees() {
 
   const handleChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
+  const handlePermissionToggle = (key) =>
+    setForm((f) => ({ ...f, permissions: { ...f.permissions, [key]: !f.permissions[key] } }));
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setSaving(true);
     try {
       if (editingId) {
-        const payload = { name: form.name, username: form.username, mobile: form.mobile, storeId: form.storeId || null };
+        const payload = {
+          name: form.name, username: form.username, mobile: form.mobile,
+          storeId: form.storeId || null,
+          permissions: form.permissions,
+        };
         if (form.password) payload.password = form.password;
         await updateEmployee(editingId, payload);
       } else {
@@ -120,7 +160,7 @@ export default function AdminEmployees() {
 
       <div className={styles.statsRow}>
         <div className={styles.statCard}>
-          <span className={styles.statNumber}>{employees.length}</span>
+          <span className={styles.statNumber}>{pagination.total}</span>
           <span className={styles.statLabel}>Total Employees</span>
         </div>
         <div className={styles.statCard}>
@@ -141,6 +181,7 @@ export default function AdminEmployees() {
               <th>Username</th>
               <th>Mobile</th>
               <th>Assigned Store</th>
+              <th>Permissions</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -155,6 +196,21 @@ export default function AdminEmployees() {
                 <td data-label="Username">{emp.username}</td>
                 <td data-label="Mobile">{emp.mobile}</td>
                 <td data-label="Assigned Store">{getStoreName(emp.storeId)}</td>
+                <td data-label="Permissions">
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                    {PERM_LABELS.map(({ key, label }) => {
+                      const enabled = emp.permissions?.[key] !== false;
+                      return (
+                        <span key={key} style={{
+                          fontSize: 11, fontWeight: 600, padding: '2px 7px',
+                          borderRadius: 4,
+                          background: enabled ? 'rgba(13,148,136,0.12)' : 'rgba(239,68,68,0.1)',
+                          color: enabled ? '#0f766e' : '#b91c1c',
+                        }}>{label}</span>
+                      );
+                    })}
+                  </div>
+                </td>
                 <td data-label="Actions">
                   <div className={styles.tdActions}>
                     <button className={styles.editBtn} onClick={() => openEdit(emp)}>Edit</button>
@@ -166,6 +222,7 @@ export default function AdminEmployees() {
             ))}
           </tbody>
         </table>
+        <Pagination page={page} pages={pagination.pages} total={pagination.total} limit={25} onPageChange={setPage} />
       </div>
 
       {/* Side Drawer */}
@@ -213,6 +270,22 @@ export default function AdminEmployees() {
                 <option key={s.id} value={s.id}>{s.name}</option>
               ))}
             </select>
+          </div>
+
+          <div className={styles.checkGroup}>
+            <span className={styles.checkGroupLabel}>Tab Permissions</span>
+            <div className={styles.checkList}>
+              {PERM_LABELS.map(({ key, label }) => (
+                <label key={key} className={styles.checkItem}>
+                  <input
+                    type="checkbox"
+                    checked={!!form.permissions[key]}
+                    onChange={() => handlePermissionToggle(key)}
+                  />
+                  {label}
+                </label>
+              ))}
+            </div>
           </div>
         </form>
       </SideDrawer>

@@ -217,7 +217,7 @@ export default function Report() {
 
 // ─── Presentational body ────────────────────────────────────────
 function ReportBody({ data, rangeLabel }) {
-  const { store, summary, stock, lowStock, topProducts, recentBills, generatedAt } = data;
+  const { store, summary, stock, lowStock, topProducts, recentBills, unpaidBills, generatedAt } = data;
 
   return (
     <>
@@ -265,6 +265,11 @@ function ReportBody({ data, rangeLabel }) {
             <span className={styles.kpiLabel}>Low Stock</span>
             <span className={styles.kpiValue}>{summary.lowStockCount}</span>
             <span className={styles.kpiSub}>Items at or below 5 units</span>
+          </div>
+          <div className={`${styles.kpiCard} ${styles.kpiAccentWarning}`}>
+            <span className={styles.kpiLabel}>Outstanding</span>
+            <span className={styles.kpiValue}>{inr(summary.totalOutstanding)}</span>
+            <span className={styles.kpiSub}>{summary.unpaidBillsCount} unpaid bill{summary.unpaidBillsCount !== 1 ? 's' : ''}</span>
           </div>
         </div>
       </div>
@@ -322,6 +327,39 @@ function ReportBody({ data, rangeLabel }) {
                     <td className={`${styles.right} ${p.stock === 0 ? styles.danger : styles.warn}`}>
                       {p.stock} {p.unit}
                     </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+
+        <div className={`${styles.section} ${styles.fullSection}`}>
+          <div className={styles.sectionHeader}>
+            <h3 className={styles.sectionTitle}>Outstanding (Unpaid) Bills</h3>
+            <span className={styles.sectionCount}>{(unpaidBills || []).length}</span>
+          </div>
+          {!unpaidBills || unpaidBills.length === 0 ? (
+            <div className={styles.empty}>No outstanding bills — all clear!</div>
+          ) : (
+            <table className={styles.miniTable}>
+              <thead>
+                <tr>
+                  <th>Bill #</th>
+                  <th>Customer</th>
+                  <th className={styles.center}>Items</th>
+                  <th className={styles.right}>Amount Due</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {unpaidBills.map((b) => (
+                  <tr key={b.id}>
+                    <td>#{b.id}</td>
+                    <td>{b.customerName}</td>
+                    <td className={styles.center}>{b.items}</td>
+                    <td className={styles.right}><strong style={{ color: '#d97706' }}>{inr(b.total)}</strong></td>
+                    <td>{fmtDate(b.createdAt)}</td>
                   </tr>
                 ))}
               </tbody>

@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import SideDrawer from '../components/SideDrawer';
 import ConfirmDialog from '../components/ConfirmDialog';
-import { getAdmins, createAdmin, updateAdmin, deleteAdmin } from '../services/superAdminService';
+import Pagination from '../components/Pagination';
+import { getAdminsPaged, createAdmin, updateAdmin, deleteAdmin } from '../services/superAdminService';
 import styles from './Page.module.css';
 
 const EMPTY = { name: '', username: '', mobile: '', password: '' };
@@ -10,6 +11,8 @@ const FORM_ID = 'admin-form';
 export default function SuperAdminAdmins() {
   const [admins, setAdmins] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState({ total: 0, pages: 0 });
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(EMPTY);
@@ -18,15 +21,15 @@ export default function SuperAdminAdmins() {
   const [confirmId, setConfirmId] = useState(null);
   const [deleting, setDeleting] = useState(false);
 
-  const load = () => {
+  const load = useCallback(() => {
     setLoading(true);
-    getAdmins()
-      .then(setAdmins)
+    getAdminsPaged(page)
+      .then((r) => { setAdmins(r.data); setPagination({ total: r.total, pages: r.pages }); })
       .catch(() => setError('Failed to load admins'))
       .finally(() => setLoading(false));
-  };
+  }, [page]);
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => { load(); }, [load]);
 
   const openAdd = () => {
     setEditingId(null);
@@ -105,7 +108,7 @@ export default function SuperAdminAdmins() {
       {/* Stat */}
       <div className={styles.statsRow}>
         <div className={styles.statCard}>
-          <span className={styles.statNumber}>{admins.length}</span>
+          <span className={styles.statNumber}>{pagination.total}</span>
           <span className={styles.statLabel}>Total Admins</span>
         </div>
       </div>
@@ -141,6 +144,7 @@ export default function SuperAdminAdmins() {
             ))}
           </tbody>
         </table>
+        <Pagination page={page} pages={pagination.pages} total={pagination.total} limit={25} onPageChange={setPage} />
       </div>
 
       {/* Side Drawer */}

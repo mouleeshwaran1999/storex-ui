@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SideDrawer from '../components/SideDrawer';
 import ConfirmDialog from '../components/ConfirmDialog';
+import Pagination from '../components/Pagination';
 import {
-  getStores, createStore, updateStore, deleteStore,
+  getStoresPaged, createStore, updateStore, deleteStore,
   getEmployees,
 } from '../services/adminService';
 import styles from './Page.module.css';
@@ -16,6 +17,8 @@ export default function AdminStores() {
   const [stores, setStores] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState({ total: 0, pages: 0 });
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(EMPTY);
@@ -26,15 +29,20 @@ export default function AdminStores() {
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
-  const load = () => {
+  const load = useCallback(() => {
     setLoading(true);
-    Promise.all([getStores(), getEmployees()])
-      .then(([s, e]) => { setStores(s); setEmployees(e); })
+    getStoresPaged(page)
+      .then((r) => { setStores(r.data); setPagination({ total: r.total, pages: r.pages }); })
       .catch(() => setError('Failed to load data'))
       .finally(() => setLoading(false));
-  };
+  }, [page]);
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => { load(); }, [load]);
+
+  // Load employees once for the drawer checkbox list
+  useEffect(() => {
+    getEmployees().then(setEmployees).catch(() => {});
+  }, []);
 
   const openAdd = () => {
     setEditingId(null);
@@ -136,7 +144,7 @@ export default function AdminStores() {
 
       <div className={styles.statsRow}>
         <div className={styles.statCard}>
-          <span className={styles.statNumber}>{stores.length}</span>
+          <span className={styles.statNumber}>{pagination.total}</span>
           <span className={styles.statLabel}>Total Stores</span>
         </div>
         <div className={styles.statCard}>
@@ -191,6 +199,7 @@ export default function AdminStores() {
             ))}
           </tbody>
         </table>
+        <Pagination page={page} pages={pagination.pages} total={pagination.total} limit={25} onPageChange={setPage} />
       </div>
 
       {/* Side Drawer */}

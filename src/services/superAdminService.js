@@ -4,3 +4,9 @@ export const getAdmins = () => axiosInstance.get('/super-admin/admins').then((r)
 export const createAdmin = (data) => axiosInstance.post('/super-admin/admins', data).then((r) => r.data);
 export const updateAdmin = (id, data) => axiosInstance.put(`/super-admin/admins/${id}`, data).then((r) => r.data);
 export const deleteAdmin = (id) => axiosInstance.delete(`/super-admin/admins/${id}`).then((r) => r.data);
+
+export const getAdminsPaged = (page = 1, limit = 25) =>
+  axiosInstance.get('/super-admin/admins', { params: { page, limit } }).then((r) => {
+    const b = r.data;
+    return Array.isArray(b) ? { data: b, total: b.length, page, pages: Math.ceil(b.length / limit) || 1, limit } : b;
+  });

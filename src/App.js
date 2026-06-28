@@ -4,6 +4,7 @@ import { AuthProvider } from './context/AuthContext';
 import { ShopProvider } from './context/ShopContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import RoleRoute from './components/RoleRoute';
+import PermRoute from './components/PermRoute';
 import Login from './pages/Login';
 import SuperAdminAdmins from './pages/SuperAdminAdmins';
 import AdminStores from './pages/AdminStores';
@@ -11,6 +12,7 @@ import AdminEmployees from './pages/AdminEmployees';
 import Products from './pages/Products';
 import Stock from './pages/Stock';
 import Billing from './pages/Billing';
+import Customers from './pages/Customers';
 import Report from './pages/Report';
 import Layout from './components/Layout';
 
@@ -66,10 +68,11 @@ export default function App() {
                 </ProtectedRoute>
               }
             >
-              <Route path="products" element={<Products />} />
-              <Route path="stock" element={<Stock />} />
-              <Route path="billing" element={<Billing />} />
-              <Route path="report" element={<Report />} />
+              <Route path="products"  element={<PermRoute permKey="products"><Products /></PermRoute>} />
+              <Route path="stock"     element={<PermRoute permKey="stock"><Stock /></PermRoute>} />
+              <Route path="billing"   element={<PermRoute permKey="billing"><Billing /></PermRoute>} />
+              <Route path="customers" element={<PermRoute permKey="customers"><Customers /></PermRoute>} />
+              <Route path="report"    element={<PermRoute permKey="report"><Report /></PermRoute>} />
               <Route index element={<Navigate to="products" replace />} />
             </Route>
 
