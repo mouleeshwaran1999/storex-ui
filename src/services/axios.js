@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+const BASE_URL = process.env.REACT_APP_API_URL || 'https://storex-api-2ft5.onrender.com/api';
+
 const axiosInstance = axios.create({
-  baseURL:  'http://localhost:5000/api',
+  baseURL: BASE_URL,
 });
 
 // Request interceptor: attach JWT from localStorage to every request.
